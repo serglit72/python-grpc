@@ -1,0 +1,16 @@
+logging:
+  # levels: "debug", "info", "warn", "error", "dpanic", "panic", and "fatal"
+  level: debug
+
+# metrics http server config. exposed in prometheus format on http://listen/metrics
+metrics:
+  listen: 0.0.0.0:8081
+
+server:
+  listen: 0.0.0.0:9090
+  source: mysql://root:root@mysql:3306,mysql:3306/anchorfree
+  cache: redis://redis:6379?expire=10m
+
+project:
+  mysql:
+    url: mysql://root:root@mysql:3306/anchorfree

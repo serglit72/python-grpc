@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  test:
+    container_name: test
+    build: .
+    volumes:
+      - ./volumes/test:/app:rw
+    command: ["sh","start.sh"]
+    
+    restart: always
+    environment:
+      MYSQL_ADDR=mysql_af: "3306"
+      LIMITS_ADDR=limits: "9090"
+
+  redis:
+    container_name: redis
+    image: redis:latest
+
+  mysql:
+    container_name: mysql_af
+    image: "mysql:5.7.27"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: anchorfree
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+     
+    volumes:
+      - ./volumes/mysql/init:/docker-entrypoint-initdb.d
+    ports: ["3306:3306"]
+    restart: always
+  
+  limits:
+    container_name: limits
+    image: gcr.io/af-image/limitsvc:limitsvc-1.2.0
+    command: ["/bin/limitsvc", "start", "--config=/etc/limitsvc/config.yaml"]
+    ports: ["9090:9090"]
+    volumes:
+      - ./volumes/limits:/etc/limitsvc
+    restart: always
+  
